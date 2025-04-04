@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
 
   s.metadata["homepage_uri"] = s.homepage
   s.metadata["changelog_uri"] = "https://github.com/Tamada-Arino/simple-inline-text-annotation/blob/master/CHANGELOG.md"
+  s.metadata["rubygems_uri"] = "https://rubygems.org/gems/simple_inline_text_annotation"
 
   gemspec = File.basename(__FILE__)
   s.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|

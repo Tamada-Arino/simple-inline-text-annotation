@@ -7,7 +7,7 @@ SimpleInlineTextAnnotation is a Ruby gem designed for working with inline text a
 To use this gem in a Rails application, add the following line to your application's `Gemfile`:
 
 ```ruby
-gem 'simple_inline_text_annotation', github: 'Tamada-Arino/simple-inline-text-annotation'
+gem 'simple_inline_text_annotation'
 ```
 
 Then, run the following command to install the gem:
