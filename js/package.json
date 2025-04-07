@@ -1,0 +1,11 @@
+{
+  "name": "simple-inline-text-annotation",
+  "version": "1.0.0",
+  "description": "A JavaScript library for inline text annotation with denotations and entity types",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
