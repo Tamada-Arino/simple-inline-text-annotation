@@ -9,3 +9,5 @@
 
 # rspec failure tracking
 /ruby/.rspec_status
+
+/js/node_modules/
