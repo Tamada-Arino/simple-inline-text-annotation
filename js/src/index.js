@@ -1,5 +1,5 @@
 import { ESCAPE_PATTERN } from './constants.js';
-// import Parser from './parser.js';
+import Parser from './parser.js';
 import Generator from './generator.js';
 
 class SimpleInlineTextAnnotation {
