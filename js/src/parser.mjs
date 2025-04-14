@@ -13,11 +13,11 @@ class Parser {
 
   constructor(source) {
     this.#source = source;
-    this.#denotations = [];
     this.#entityTypeCollection = new EntityTypeCollection(source);
   }
 
   parse() {
+    this.#denotations = [];
     let fullText = this.#sourceWithoutReferences();
 
     fullText = this.#processDenotations(fullText);

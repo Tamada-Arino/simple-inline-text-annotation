@@ -11,11 +11,11 @@ class SimpleInlineTextAnnotation
 
     def initialize(source)
       @source = source.dup.freeze
-      @denotations = []
       @entity_type_collection = EntityTypeCollection.new(source)
     end
 
     def parse
+      @denotations = []
       full_text = source_without_references
 
       process_denotations(full_text)
