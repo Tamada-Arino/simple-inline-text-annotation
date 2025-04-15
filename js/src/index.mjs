@@ -12,7 +12,7 @@ class SimpleInlineTextAnnotation {
 
   static parse(source) {
     const parser = new Parser(source);
-    const result = parser.parse().#toObject();
+    const result = parser.parse().toObject();
 
     return result;
   }
@@ -22,7 +22,7 @@ class SimpleInlineTextAnnotation {
     return generator.generate();
   }
 
-  #toObject() {
+  toObject() {
     const result = {
       text: this.#formatText(this.text),
       denotations: this.denotations.map((d) => d.toObject()),
