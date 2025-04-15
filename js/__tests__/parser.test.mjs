@@ -1,4 +1,5 @@
 import SimpleInlineTextAnnotation from '../src/index.mjs';
+import Parser from '../src/parser.mjs';
 
 describe('SimpleInlineTextAnnotation.parse', () => {
   test('should parse as denotation when source has annotation structure', () => {
@@ -193,5 +194,24 @@ Elon Musk is a member of the PayPal Mafia.`;
       }
     };
     expect(SimpleInlineTextAnnotation.parse(source)).toStrictEqual(expected);
+  });
+});
+
+describe('Parser', () => {
+  test('should not accumulate denotations when parse is called multiple times', () => {
+    const source = `[Elon Musk][Person] is a member of the [PayPal Mafia][Organization].
+
+[Person]: https://example.com/Person
+[Organization]: https://example.com/Organization`;
+
+console.log("source");
+    const parser = new Parser(source);
+    parser.parse();
+    const result = parser.parse().toObject();
+
+    expect(result.denotations).toEqual([
+      { span: { begin: 0, end: 9 }, obj: "https://example.com/Person" },
+      { span: { begin: 29, end: 41 }, obj: "https://example.com/Organization" },
+    ]);
   });
 });

@@ -302,5 +302,34 @@ RSpec.describe SimpleInlineTextAnnotation::Parser, type: :model do
         is_expected.to eq(expected_format)
       end
     end
+
+    context "when parse is called multiple times" do
+      let(:source) do
+        <<~MD
+          [Elon Musk][Person] is a member of the [PayPal Mafia][Organization].
+
+          [Person]: https://example.com/Person
+          [Organization]: https://example.com/Organization
+        MD
+      end
+
+      let(:expected_format) do
+        {
+          "text": "Elon Musk is a member of the PayPal Mafia.",
+          "denotations": [
+            { "span": { "begin": 0, "end": 9 }, "obj": "https://example.com/Person" },
+            { "span": { "begin": 29, "end": 41 }, "obj": "https://example.com/Organization" }
+          ]
+        }
+      end
+
+      it "does not accumulate denotations when parse is called multiple times" do
+        parser = SimpleInlineTextAnnotation::Parser.new(source)
+        parser.parse
+        result = parser.parse.to_h
+
+        expect(result[:denotations]).to eq(expected_format[:denotations])
+      end
+    end
   end
 end
