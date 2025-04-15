@@ -204,7 +204,6 @@ describe('Parser', () => {
 [Person]: https://example.com/Person
 [Organization]: https://example.com/Organization`;
 
-console.log("source");
     const parser = new Parser(source);
     parser.parse();
     const result = parser.parse().toObject();
