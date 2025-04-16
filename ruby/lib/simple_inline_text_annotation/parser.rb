@@ -16,6 +16,7 @@ class SimpleInlineTextAnnotation
 
     def parse
       @denotations = []
+      @relations = []
       full_text = source_without_references
 
       process_denotations(full_text)
@@ -23,6 +24,7 @@ class SimpleInlineTextAnnotation
       SimpleInlineTextAnnotation.new(
         full_text,
         @denotations,
+        @relations.empty? ? nil : @relations,
         @entity_type_collection
       )
     end
@@ -49,16 +51,25 @@ class SimpleInlineTextAnnotation
 
     def process_single_denotation(match, full_text)
       target_text = match[1]
-      label = match[2]
 
-      begin_pos = match.begin(0)
-      end_pos = begin_pos + target_text.length
-      obj = get_obj_for(label)
+      info = match[2].split(", ")
 
-      @denotations << Denotation.new(begin_pos, end_pos, obj)
+      case info.size
+      when 1
+        label = match[2]
 
-      # Replace the processed annotation with its text content
-      full_text[match.begin(0)...match.end(0)] = target_text
+        begin_pos = match.begin(0)
+        end_pos = begin_pos + target_text.length
+        obj = get_obj_for(label)
+
+        @denotations << Denotation.new(begin_pos, end_pos, obj)
+
+        # Replace the processed annotation with its text content
+        full_text[match.begin(0)...match.end(0)] = target_text
+      when 2
+      when 4
+      else
+      end
     end
   end
 end

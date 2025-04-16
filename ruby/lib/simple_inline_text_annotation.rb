@@ -20,9 +20,10 @@ class SimpleInlineTextAnnotation
   # Example: \[This is a part of][original text]
   ESCAPE_PATTERN = /\\(?=\[[^\]]+\]\[[^\]]+\])/
 
-  def initialize(text, denotations, entity_type_collection)
+  def initialize(text, denotations, relations, entity_type_collection)
     @text = text
     @denotations = denotations
+    @relations = relations
     @entity_type_collection = entity_type_collection
   end
 
@@ -39,6 +40,7 @@ class SimpleInlineTextAnnotation
     {
       text: format_text(@text),
       denotations: @denotations.map(&:to_h),
+      relations: @relations&.map(&:to_h),
       config: config
     }.compact
   end
