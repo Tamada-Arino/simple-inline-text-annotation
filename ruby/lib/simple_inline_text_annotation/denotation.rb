@@ -5,12 +5,13 @@ require_relative "generator_error"
 
 class SimpleInlineTextAnnotation
   class Denotation
-    attr_reader :begin_pos, :end_pos, :obj
+    attr_reader :begin_pos, :end_pos, :obj, :id
 
-    def initialize(begin_pos, end_pos, obj)
+    def initialize(begin_pos, end_pos, obj, id = nil)
       @begin_pos = begin_pos
       @end_pos = end_pos
       @obj = obj
+      @id = id
     end
 
     def span
@@ -18,7 +19,7 @@ class SimpleInlineTextAnnotation
     end
 
     def to_h
-      { span: span, obj: @obj }
+      { id: @id, span: span, obj: @obj }.compact
     end
 
     def nested_within?(other)
