@@ -72,6 +72,10 @@ class SimpleInlineTextAnnotation
 
         full_text[match.begin(0)...match.end(0)] = target_text
       when 4
+        @denotations << Denotation.new(begin_pos, end_pos, annotations[1], annotations[0])
+        @relations << { pred: annotations[2], subj: annotations[0], obj: annotations[3] }
+
+        full_text[match.begin(0)...match.end(0)] = target_text
       else
       end
     end
