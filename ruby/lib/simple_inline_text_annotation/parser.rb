@@ -51,15 +51,13 @@ class SimpleInlineTextAnnotation
 
     def process_single_denotation(match, full_text)
       target_text = match[1]
+      begin_pos = match.begin(0)
+      end_pos = begin_pos + target_text.length
+      annotations = match[2].split(", ")
 
-      info = match[2].split(", ")
-
-      case info.size
+      case annotations.size
       when 1
         label = match[2]
-
-        begin_pos = match.begin(0)
-        end_pos = begin_pos + target_text.length
         obj = get_obj_for(label)
 
         @denotations << Denotation.new(begin_pos, end_pos, obj)
@@ -67,6 +65,12 @@ class SimpleInlineTextAnnotation
         # Replace the processed annotation with its text content
         full_text[match.begin(0)...match.end(0)] = target_text
       when 2
+        obj = annotations[1]
+        id = annotations[0]
+
+        @denotations << Denotation.new(begin_pos, end_pos, obj, id)
+
+        full_text[match.begin(0)...match.end(0)] = target_text
       when 4
       else
       end
