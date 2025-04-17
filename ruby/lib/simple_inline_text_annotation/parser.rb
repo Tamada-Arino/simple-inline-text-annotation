@@ -45,7 +45,7 @@ class SimpleInlineTextAnnotation
     def process_denotations(full_text)
       pos = 0
 
-      while match = DENOTATION_PATTERN.match(full_text, pos)
+      while (match = DENOTATION_PATTERN.match(full_text, pos))
         result = process_single_denotation(match, full_text)
         pos = result == :processed ? match.begin(0) + match[1].length : match.end(0)
       end
@@ -57,6 +57,13 @@ class SimpleInlineTextAnnotation
       end_pos = begin_pos + target_text.length
       annotations = match[2].split(", ")
 
+      return :skipped unless process_annotation_by_size(annotations, begin_pos, end_pos)
+
+      full_text[match.begin(0)...match.end(0)] = target_text
+      :processed
+    end
+
+    def process_annotation_by_size(annotations, begin_pos, end_pos)
       case annotations.size
       when 1
         process_single_annotation(begin_pos, end_pos, annotations[0])
@@ -64,12 +71,7 @@ class SimpleInlineTextAnnotation
         process_double_annotation(begin_pos, end_pos, annotations)
       when 4
         process_quadruple_annotation(begin_pos, end_pos, annotations)
-      else
-        return :skipped
       end
-
-      full_text[match.begin(0)...match.end(0)] = target_text
-      :processed
     end
 
     def process_single_annotation(begin_pos, end_pos, label)
