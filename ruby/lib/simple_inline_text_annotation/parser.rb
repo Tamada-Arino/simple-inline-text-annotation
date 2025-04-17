@@ -43,9 +43,11 @@ class SimpleInlineTextAnnotation
     end
 
     def process_denotations(full_text)
-      while full_text =~ DENOTATION_PATTERN
-        match = Regexp.last_match
-        process_single_denotation(match, full_text)
+      pos = 0
+
+      while match = DENOTATION_PATTERN.match(full_text, pos)
+        result = process_single_denotation(match, full_text)
+        pos = result == :processed ? match.begin(0) + match[1].length : match.end(0)
       end
     end
 
@@ -64,6 +66,7 @@ class SimpleInlineTextAnnotation
 
         # Replace the processed annotation with its text content
         full_text[match.begin(0)...match.end(0)] = target_text
+        :processed
       when 2
         obj = annotations[1]
         id = annotations[0]
@@ -71,12 +74,15 @@ class SimpleInlineTextAnnotation
         @denotations << Denotation.new(begin_pos, end_pos, obj, id)
 
         full_text[match.begin(0)...match.end(0)] = target_text
+        :processed
       when 4
         @denotations << Denotation.new(begin_pos, end_pos, annotations[1], annotations[0])
         @relations << { pred: annotations[2], subj: annotations[0], obj: annotations[3] }
 
         full_text[match.begin(0)...match.end(0)] = target_text
+        :processed
       else
+        :skipped
       end
     end
   end
