@@ -59,31 +59,35 @@ class SimpleInlineTextAnnotation
 
       case annotations.size
       when 1
-        label = match[2]
-        obj = get_obj_for(label)
-
-        @denotations << Denotation.new(begin_pos, end_pos, obj)
-
-        # Replace the processed annotation with its text content
-        full_text[match.begin(0)...match.end(0)] = target_text
-        :processed
+        process_single_annotation(begin_pos, end_pos, annotations[0])
       when 2
-        obj = annotations[1]
-        id = annotations[0]
-
-        @denotations << Denotation.new(begin_pos, end_pos, obj, id)
-
-        full_text[match.begin(0)...match.end(0)] = target_text
-        :processed
+        process_double_annotation(begin_pos, end_pos, annotations)
       when 4
-        @denotations << Denotation.new(begin_pos, end_pos, annotations[1], annotations[0])
-        @relations << { pred: annotations[2], subj: annotations[0], obj: annotations[3] }
-
-        full_text[match.begin(0)...match.end(0)] = target_text
-        :processed
+        process_quadruple_annotation(begin_pos, end_pos, annotations)
       else
-        :skipped
+        return :skipped
       end
+
+      full_text[match.begin(0)...match.end(0)] = target_text
+      :processed
+    end
+
+    def process_single_annotation(begin_pos, end_pos, label)
+      obj = get_obj_for(label)
+      @denotations << Denotation.new(begin_pos, end_pos, obj)
+    end
+
+    def process_double_annotation(begin_pos, end_pos, annotations)
+      id, label = annotations
+      obj = get_obj_for(label)
+      @denotations << Denotation.new(begin_pos, end_pos, obj, id)
+    end
+
+    def process_quadruple_annotation(begin_pos, end_pos, annotations)
+      subj, label, pred, obj2 = annotations
+      obj = get_obj_for(label)
+      @denotations << Denotation.new(begin_pos, end_pos, obj, subj)
+      @relations << { pred: pred, subj: subj, obj: obj2 }
     end
   end
 end
