@@ -293,7 +293,7 @@ RSpec.describe SimpleInlineTextAnnotation::Parser, type: :model do
           ],
           "relations": [
             { "pred": "member_of", "subj": "T1", "obj": "T2" }
-          ],
+          ]
         }
       end
 
@@ -332,6 +332,24 @@ RSpec.describe SimpleInlineTextAnnotation::Parser, type: :model do
       end
 
       it "parse as entity types with ignoring white spaces" do
+        is_expected.to eq(expected_format)
+      end
+    end
+
+    context "when the number of annotations is invalid" do
+      let(:source) do
+        "[Elon Musk][T1, Person, member_of, T2, Hoge] is a member of the " \
+        "[PayPal Mafia][T2, Organization, Fuga]."
+      end
+      let(:expected_format) do
+        {
+          "text": "[Elon Musk][T1, Person, member_of, T2, Hoge] is a member of the " \
+          "[PayPal Mafia][T2, Organization, Fuga].",
+          "denotations": []
+        }
+      end
+
+      it "brackets remain in the text" do
         is_expected.to eq(expected_format)
       end
     end
