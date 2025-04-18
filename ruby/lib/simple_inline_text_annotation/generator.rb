@@ -57,10 +57,13 @@ class SimpleInlineTextAnnotation
 
       return annotations.compact.join(", ") unless labeled_entity_types
 
-      entity = labeled_entity_types.find { |entity_type| entity_type["id"] == obj }
-      annotations[1] = entity["label"] if entity
-
+      annotations[1] = find_entity_label(obj)
       annotations.compact.join(", ")
+    end
+
+    def find_entity_label(obj)
+      entity = labeled_entity_types.find { |entity_type| entity_type["id"] == obj }
+      entity ? entity["label"] : obj
     end
 
     def build_label_definitions
