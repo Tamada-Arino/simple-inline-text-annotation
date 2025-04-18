@@ -24,7 +24,7 @@ class SimpleInlineTextAnnotation
       SimpleInlineTextAnnotation.new(
         full_text,
         @denotations,
-        @relations.empty? ? nil : @relations,
+        @relations,
         @entity_type_collection
       )
     end

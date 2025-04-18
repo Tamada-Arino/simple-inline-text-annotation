@@ -40,7 +40,7 @@ class SimpleInlineTextAnnotation
     {
       text: format_text(@text),
       denotations: @denotations.map(&:to_h),
-      relations: @relations&.map(&:to_h),
+      relations: @relations.empty? ? nil : @relations,
       config: config
     }.compact
   end
