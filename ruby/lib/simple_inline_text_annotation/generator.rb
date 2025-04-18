@@ -27,7 +27,7 @@ class SimpleInlineTextAnnotation
     private
 
     def build_denotations(denotations)
-      denotations.map { |d| Denotation.new(d["span"]["begin"], d["span"]["end"], d["obj"]) }
+      denotations.map { |d| Denotation.new(d["span"]["begin"], d["span"]["end"], d["obj"], d["id"]) }
     end
 
     def annotate_text(text, denotations)
@@ -35,9 +35,9 @@ class SimpleInlineTextAnnotation
       denotations.sort_by(&:begin_pos).reverse_each do |denotation|
         begin_pos = denotation.begin_pos
         end_pos = denotation.end_pos
-        obj = get_obj(denotation.obj)
+        annotations = get_annotations(denotation.obj, denotation.id)
 
-        annotated_text = "[#{text[begin_pos...end_pos]}][#{obj}]"
+        annotated_text = "[#{text[begin_pos...end_pos]}][#{annotations}]"
         text = text[0...begin_pos] + annotated_text + text[end_pos..]
       end
 
@@ -50,11 +50,17 @@ class SimpleInlineTextAnnotation
       @config["entity types"]&.select { |entity_type| entity_type.key?("label") }
     end
 
-    def get_obj(obj)
-      return obj unless labeled_entity_types
+    def get_annotations(obj, id)
+      relations = @source["relations"]
+      relation = relations&.find { |rel| rel["subj"] == id }
+      annotations = [id, obj, relation&.dig("pred"), relation&.dig("obj")]
+
+      return annotations.compact.join(", ") unless labeled_entity_types
 
       entity = labeled_entity_types.find { |entity_type| entity_type["id"] == obj }
-      entity ? entity["label"] : obj
+      annotations[1] = entity["label"] if entity
+
+      annotations.compact.join(", ")
     end
 
     def build_label_definitions
